@@ -7,11 +7,12 @@ description: Write simple, quick scripts (.sh, .bat) for MVPs or prototypes.
 
 Scripts in MVP/prototype contexts should be **ugly, fast, and obviously correct** — validate quickly, not impress.
 
-> Keywords follow RFC 2119.
-
 ## The Core Rules
 
-**No numbering**
+> Keywords follow RFC 2119.
+
+### No numbering
+
 You MUST NOT use step numbers. They go stale when steps are inserted or reordered.
 
 ```bash
@@ -24,7 +25,8 @@ echo "Build"
 npm run build
 ```
 
-**Only log what you can't see otherwise**
+### Only log what you can't see otherwise
+
 You MUST log runtime-dependent values (paths, URLs, IDs). You MUST NOT log self-evident actions.
 
 ```bash
@@ -37,7 +39,8 @@ echo "Dest dir: $DEST_DIR"
 cp -r src/ "$DEST_DIR"
 ```
 
-**Fail fast**
+### Fail fast
+
 You MUST NOT add retries, fallbacks, or friendly error messages. Let it crash with the raw error.
 
 ```bash
@@ -54,7 +57,8 @@ mkdir -p "$DIR"
 
 Use `set -euo pipefail` (and optionally `set -x` for debugging) at the top.
 
-**Only comment the non-obvious**
+### Only comment the non-obvious
+
 Comments MUST explain why — intent and constraint — not what. You MUST NOT duplicate the `echo`.
 
 ```bash
@@ -76,7 +80,8 @@ echo "Get data"
 curl https://example.com/api/data
 ```
 
-**Automation**
+### Automation
+
 Scripts MUST be callable by AI agents or other programs without modification. You MUST NOT use interactive prompts. You MUST use exit codes to signal success/failure — do not make callers parse output.
 
 ```bash
@@ -94,7 +99,8 @@ set -euo pipefail
 ./deploy.sh
 ```
 
-**No decorative output**
+### No decorative output
+
 You SHOULD NOT add visual banners, dividers, or section headers.
 
 ```bash
@@ -109,7 +115,8 @@ echo "Create folder"
 mkdir output
 ```
 
-**Hardcode values**
+### Hardcode values
+
 You SHOULD hardcode values directly. No flags, no config files, no argument parsing. For values callers need to override, use an env var with a default.
 
 ```bash
