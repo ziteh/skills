@@ -13,7 +13,7 @@ Scripts in MVP/prototype contexts should be **ugly, fast, and obviously correct*
 
 ### No numbering
 
-You MUST NOT use step numbers. They go stale when steps are inserted or reordered.
+- MUST NOT use step numbers. They go stale when steps are inserted or reordered.
 
 ```bash
 # DON'T
@@ -27,7 +27,8 @@ npm run build
 
 ### Only log what you can't see otherwise
 
-You MUST log runtime-dependent values (paths, URLs, IDs). You MUST NOT log self-evident actions.
+- MUST log runtime-dependent values (paths, URLs, IDs).
+- MUST NOT log self-evident actions.
 
 ```bash
 # DON'T — logs the action, not the value that matters
@@ -41,7 +42,7 @@ cp -r src/ "$DEST_DIR"
 
 ### Fail fast
 
-You MUST NOT add retries, fallbacks, or friendly error messages. Let it crash with the raw error.
+- MUST NOT add retries, fallbacks, or friendly error messages. Let it crash with the raw error.
 
 ```bash
 # DON'T
@@ -59,7 +60,10 @@ Use `set -euo pipefail` (and optionally `set -x` for debugging) at the top.
 
 ### Only comment the non-obvious
 
-Comments MUST explain why — intent and constraint — not what. You MUST NOT duplicate the `echo`.
+Comments:
+
+- MUST explain why — intent and constraint — not what.
+- MUST NOT duplicate the `echo`.
 
 ```bash
 # DON'T
@@ -82,7 +86,11 @@ curl https://example.com/api/data
 
 ### Automation
 
-Scripts MUST be fully autonomous. You MUST NOT use interactive prompts. You MUST use exit codes to signal success/failure.
+Scripts:
+
+- MUST be fully autonomous.
+- MUST NOT use interactive prompts.
+- MUST use exit codes to signal success/failure.
 
 ```bash
 # DON'T — blocks automation
@@ -101,7 +109,7 @@ set -euo pipefail
 
 ### No decorative output
 
-You SHOULD NOT add visual banners, dividers, or section headers.
+- SHOULD NOT add visual banners, dividers, or section headers.
 
 ```bash
 # DON'T
