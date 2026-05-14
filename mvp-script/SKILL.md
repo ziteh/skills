@@ -110,17 +110,23 @@ set -euo pipefail
 ### No decorative output
 
 - SHOULD NOT add visual banners, dividers, or section headers.
+- Exception: MAY use decoration to highlight a final result.
 
 ```bash
-# DON'T
+# DON'T — decorates a routine step
 echo "=================="
 echo "Create folder"
 echo "=================="
 mkdir output
 
-# DO
+# DO — no decoration for routine steps
 echo "Create folder"
 mkdir output
+
+# OK — decoration draws attention to the final result
+echo "=================="
+echo "Output: $RES_FILE"
+echo "Failed: $FAILED_CNT/$TOTAL_CNT"
 ```
 
 ## Workflow
