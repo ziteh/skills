@@ -82,7 +82,7 @@ curl https://example.com/api/data
 
 ### Automation
 
-Scripts MUST be callable by AI agents or other programs without modification. You MUST NOT use interactive prompts. You MUST use exit codes to signal success/failure — do not make callers parse output.
+Scripts MUST be fully autonomous. You MUST NOT use interactive prompts. You MUST use exit codes to signal success/failure.
 
 ```bash
 # DON'T — blocks automation
