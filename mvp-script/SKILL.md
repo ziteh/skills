@@ -11,21 +11,6 @@ Scripts in MVP/prototype contexts should be **ugly, fast, and obviously correct*
 
 ## The Core Rules
 
-**No decorative output**
-You SHOULD NOT add visual banners, dividers, or section headers.
-
-```bash
-# DON'T
-echo "=================="
-echo "Create folder"
-echo "=================="
-mkdir output
-
-# DO
-echo "Create folder"
-mkdir output
-```
-
 **No numbering**
 You MUST NOT use step numbers. They go stale when steps are inserted or reordered.
 
@@ -91,20 +76,6 @@ echo "Get data"
 curl https://example.com/api/data
 ```
 
-**Hardcode values**
-You SHOULD hardcode values directly. No flags, no config files, no argument parsing. For values callers need to override, use an env var with a default.
-
-```bash
-# DON'T — argument parsing adds unnecessary complexity
-OUTPUT_DIR="${1:-./output}"
-
-# DO — hardcoded (nothing needs to vary)
-BASE_URL="https://api.example.com"
-
-# DO — env var with fallback (callers may need a different path)
-OUTPUT_DIR="${OUTPUT_DIR:-./output}"
-```
-
 **Automation**
 Scripts MUST be callable by AI agents or other programs without modification. You MUST NOT use interactive prompts. You MUST use exit codes to signal success/failure — do not make callers parse output.
 
@@ -121,4 +92,33 @@ fi
 # DO — set -euo pipefail propagates failures automatically; caller checks exit code
 set -euo pipefail
 ./deploy.sh
+```
+
+**No decorative output**
+You SHOULD NOT add visual banners, dividers, or section headers.
+
+```bash
+# DON'T
+echo "=================="
+echo "Create folder"
+echo "=================="
+mkdir output
+
+# DO
+echo "Create folder"
+mkdir output
+```
+
+**Hardcode values**
+You SHOULD hardcode values directly. No flags, no config files, no argument parsing. For values callers need to override, use an env var with a default.
+
+```bash
+# DON'T — argument parsing adds unnecessary complexity
+OUTPUT_DIR="${1:-./output}"
+
+# DO — hardcoded (nothing needs to vary)
+BASE_URL="https://api.example.com"
+
+# DO — env var with fallback (callers may need a different path)
+OUTPUT_DIR="${OUTPUT_DIR:-./output}"
 ```
