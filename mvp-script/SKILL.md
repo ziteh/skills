@@ -122,3 +122,9 @@ BASE_URL="https://api.example.com"
 # DO — env var with fallback (callers may need a different path)
 OUTPUT_DIR="${OUTPUT_DIR:-./output}"
 ```
+
+## Workflow
+
+- Run scripts after writing; verify it behaves as expected.
+- On unexpected behavior: add debug output (`set -x`, `echo`) → diagnose → fix → keep only the messages that matter at runtime and remove any temporary debug messages.
+- On repeated failure: decompose → test parts independently → integrate.
