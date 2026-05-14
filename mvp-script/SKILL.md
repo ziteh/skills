@@ -5,12 +5,14 @@ description: Write simple, quick scripts (.sh, .bat) for MVPs or prototypes.
 
 # MVP Script
 
-Scripts in MVP/prototype contexts should be **ugly, fast, and obviously correct**. The goal is to validate quickly, not to impress. These concepts apply to any script (even if only using .sh as an example).
+Scripts in MVP/prototype contexts should be **ugly, fast, and obviously correct** — validate quickly, not impress.
+
+> Keywords follow RFC 2119.
 
 ## The Core Rules
 
 **No decorative output**
-Never add visual banners, dividers, or section headers. Only print what you actually need to see.
+You SHOULD NOT add visual banners, dividers, or section headers.
 
 ```bash
 # DON'T
@@ -25,7 +27,7 @@ mkdir output
 ```
 
 **No numbering**
-Step numbers go stale the moment you insert or reorder a step. Omit them entirely.
+You MUST NOT use step numbers. They go stale when steps are inserted or reordered.
 
 ```bash
 # DON'T
@@ -33,25 +35,25 @@ echo "Step 1: Build"
 npm run build
 
 # DO
-echo "Building assets"
+echo "Build"
 npm run build
 ```
 
 **Only log what you can't see otherwise**
-Log runtime-dependent values (paths, URLs, IDs) — they're invisible from the code itself. Don't log actions that are self-evident.
+You MUST log runtime-dependent values (paths, URLs, IDs). You MUST NOT log self-evident actions.
 
 ```bash
-# DON'T — the action is obvious; the variable value is not
+# DON'T — logs the action, not the value that matters
 echo "Copying files"
 cp -r src/ "$DEST_DIR"
 
-# DO
+# DO — logs the value; the action is self-evident
 echo "Dest dir: $DEST_DIR"
 cp -r src/ "$DEST_DIR"
 ```
 
 **Fail fast**
-No retries, no fallback, no friendly error messages. Let it crash with the raw error.
+You MUST NOT add retries, fallbacks, or friendly error messages. Let it crash with the raw error.
 
 ```bash
 # DON'T
@@ -61,25 +63,14 @@ if ! mkdir -p "$DIR"; then
 fi
 
 # DO
-set -e
+set -euo pipefail  # -u catches unbound vars; pipefail catches silent pipe failures
 mkdir -p "$DIR"
 ```
 
-Use `set -e` (and optionally `set -x` for debugging) at the top.
+Use `set -euo pipefail` (and optionally `set -x` for debugging) at the top.
 
-**Comment only non-obvious**
-Comments should explain why — intent and constraint — not what. Never duplicate the `echo`.
-
-```bash
-# DON'T
-echo "Get data"
-# Get data from API via curl
-curl https://example.com/api/data
-
-# DO
-echo "Get data from API"
-curl https://example.com/api/data
-```
+**Only comment the non-obvious**
+Comments MUST explain why — intent and constraint — not what. You MUST NOT duplicate the `echo`.
 
 ```bash
 # DON'T
@@ -89,8 +80,19 @@ sleep 10 # Wait for 10 seconds
 sleep 10 # Avoid rate limiting
 ```
 
+```bash
+# DON'T
+echo "Get data"
+# Get data from API via curl
+curl https://example.com/api/data
+
+# DO
+echo "Get data"
+curl https://example.com/api/data
+```
+
 **Hardcode values**
-No flags, no config files, no argument parsing. Hardcode values directly. For values that callers need to override, use an env var with a default instead.
+You SHOULD hardcode values directly. No flags, no config files, no argument parsing. For values callers need to override, use an env var with a default.
 
 ```bash
 # DON'T — argument parsing adds unnecessary complexity
@@ -104,19 +106,19 @@ OUTPUT_DIR="${OUTPUT_DIR:-./output}"
 ```
 
 **Automation**
-Scripts should be callable by AI agents or other programs without modification. No interactive prompts. Use exit codes to signal success/failure — don't make callers parse output.
+Scripts MUST be callable by AI agents or other programs without modification. You MUST NOT use interactive prompts. You MUST use exit codes to signal success/failure — do not make callers parse output.
 
 ```bash
 # DON'T — blocks automation
 read -p "Continue? (y/n) " confirm
 [[ "$confirm" != "y" ]] && exit 1
 
-# DON'T — caller can't detect failure reliably
+# DON'T — failure is swallowed; outer script still exits 0
 if ! ./deploy.sh; then
   echo "Deploy failed"
 fi
 
-# DO — set -e propagates failures automatically; caller checks exit code
-set -e
+# DO — set -euo pipefail propagates failures automatically; caller checks exit code
+set -euo pipefail
 ./deploy.sh
 ```
