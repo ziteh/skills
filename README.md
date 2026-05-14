@@ -4,7 +4,11 @@ My [Agent Skills](https://agentskills.io/home)
 
 ## Validation
 
-Uses `skills-ref` to validate SKILL.md files.
+```bash
+./validate.sh
+```
+
+Or uses `skills-ref` to validate SKILL.md files.
 
 ```bash
 cd agentskills/skills-ref
