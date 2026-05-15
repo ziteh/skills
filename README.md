@@ -18,7 +18,7 @@ Uses `skills-ref` to validate SKILL.md files.
 ./validate.sh
 ```
 
-or 
+or
 
 ```bash
 cd agentskills/skills-ref

@@ -75,3 +75,18 @@ Good (LLM-optimized, direct, strict):
 - Queries MUST include `WHERE deleted_at IS NULL` (soft deletes are used).
 - The `auth_helper.py` script MUST be used for all authentication.
 ```
+
+## Validation
+
+`scripts/check.py` validates `.md` files. The venv is created automatically on first run.
+
+```sh
+# Check specific files
+python3 scripts/check.py SKILL.md
+
+# Check a directory (recursive)
+python3 scripts/check.py docs/
+
+# Mix files and directories
+python3 scripts/check.py SKILL.md docs/
+```
