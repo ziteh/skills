@@ -24,7 +24,7 @@ PIP_AUDIT_VER = "==2.10.0"
 
 
 class Colors:
-    RED = "\033[91m"
+    YELLOW = "\033[93m"
     GRAY = "\033[90m"
     ENDC = "\033[0m"
 
@@ -99,7 +99,7 @@ def _run_audit(venv: Path) -> None:
     if result.returncode != 0:
         # Just print the warning and audit results, don't fail the whole process
         print(
-            f"{Colors.RED}[SECURITY WARNING]{Colors.ENDC} pip-audit found known vulnerabilities:"
+            f"{Colors.YELLOW}[SECURITY WARNING]{Colors.ENDC} pip-audit found known vulnerabilities:"
         )
         print(result.stdout)
         print(
