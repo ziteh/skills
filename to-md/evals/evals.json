@@ -1,0 +1,73 @@
+{
+  "skill_name": "to-md",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "I have a PDF report at ~/Downloads/report.pdf, convert it to markdown and save as report.md in the same folder.",
+      "expected_output": "Uses markitdown CLI or Python API to convert the PDF to markdown. Checks if markitdown is installed first, runs the conversion, and saves the output to ~/Downloads/report.md.",
+      "files": [],
+      "assertions": [
+        {
+          "name": "uses-markitdown",
+          "description": "Response uses markitdown (not an alternative like pdftotext, pypdf2, or pandoc) as the primary conversion tool"
+        },
+        {
+          "name": "checks-installation",
+          "description": "Response checks or mentions verifying that markitdown is installed before running the conversion"
+        },
+        {
+          "name": "correct-output-path",
+          "description": "Output file path is ~/Downloads/report.md (same directory as input)"
+        },
+        {
+          "name": "provides-runnable-command",
+          "description": "Contains a concrete CLI command or Python snippet that could actually be executed"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "Convert all .xlsx files in my current directory to markdown tables.",
+      "expected_output": "Writes a batch conversion script (bash loop or Python with pathlib) that converts every .xlsx file to a .md file using markitdown. Handles multiple files efficiently rather than one-off CLI calls.",
+      "files": [],
+      "assertions": [
+        {
+          "name": "uses-markitdown",
+          "description": "Uses markitdown for the conversion, not openpyxl/pandas/xlrd alone"
+        },
+        {
+          "name": "handles-multiple-files",
+          "description": "Uses a loop, glob pattern, or wildcard rather than a single hardcoded filename"
+        },
+        {
+          "name": "output-files-named-correctly",
+          "description": "Each .xlsx input maps to a corresponding .md output filename (e.g. data.xlsx -> data.md)"
+        },
+        {
+          "name": "provides-runnable-code",
+          "description": "Code or script is complete and could be run without modification"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Turn this page into markdown: https://en.wikipedia.org/wiki/Markdown",
+      "expected_output": "Uses markitdown to fetch and convert the URL to markdown. Either runs `markitdown <url>` in the CLI or uses the Python API's convert() method on the URL string.",
+      "files": [],
+      "assertions": [
+        {
+          "name": "uses-markitdown",
+          "description": "Uses markitdown to convert the URL, not wget+pandoc, requests+BeautifulSoup, or other scraping approaches"
+        },
+        {
+          "name": "url-passed-directly",
+          "description": "The Wikipedia URL is passed directly to markitdown rather than first downloading the HTML separately"
+        },
+        {
+          "name": "output-is-markdown",
+          "description": "The response either prints, saves, or shows a sample of the resulting markdown content"
+        }
+      ]
+    }
+  ]
+}
