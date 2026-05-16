@@ -1,11 +1,11 @@
 ---
 name: llm-friendly-md
-description: Guides writing LLM-friendly Markdown optimized for token efficiency, semantic clarity, and retrieval precision. Use whenever writing or reviewing any Markdown document intended for AI consumption — including SKILL.md, CLAUDE.md, AGENTS.md, prompt templates, system prompts, README files for AI tools, or any .md file that an LLM will read, parse, or act on.
+description: Write, improve, or evaluate Markdown intended for LLM consumption — including SKILL.md, AGENTS.md, prompt templates, agent specs, and any .md files an LLM will read or act upon.
 ---
 
 # LLM-Friendly Markdown
 
-Write for LLMs first, not general human-facing. Optimize for token efficiency, semantic clarity, and retrieval precision — not visual polish.
+Write for LLMs first, not general human-facing. Help LLMs better understand and adhere to the content, reduce token usage, and minimize semantic noise
 
 > Keywords follow RFC 2119.
 
@@ -13,9 +13,9 @@ Write for LLMs first, not general human-facing. Optimize for token efficiency, s
 
 ### Document Structure
 
-- A document MUST have exactly one H1.
-- Heading levels MUST NOT be skipped (e.g., H2 directly to H4).
-- Heading and list nesting SHOULD NOT exceed 3 levels.
+- A document MUST have exactly one H1. LLM retrievers treat H1 as the document title. Multiple H1s fragment the document's semantic identity.
+- Heading levels MUST NOT be skipped (e.g., H2 directly to H4). Heading hierarchy infers parent-child containment; skipping levels breaks the implied tree, causing retrieved chunks to lose their governing context.
+- Heading and list nesting SHOULD NOT exceed 3 levels. LLMs have limited ability to understand deeply nested structures.
 
 **Bad:**
 
@@ -39,12 +39,12 @@ Write for LLMs first, not general human-facing. Optimize for token efficiency, s
 
 ### Language and Clarity
 
-- Content MUST be written in concise, precise English.
-- Front-loading: The conclusion, constraint, or action target MUST appear at the start of each paragraph.
-- Pleasantries and openers (e.g., "In this section, we will...") MUST NOT be used.
-- Double negatives MUST NOT be used.
-- Pronouns SHOULD be replaced with concrete nouns to eliminate ambiguous reference.
-- When expressing the degree of constraint, the RFC 2119 keywords (MUST, MUST NOT, SHOULD, SHOULD NOT, MAY) MAY be used.
+- Content MUST be written in concise, precise English. Imprecise wording forces the LLM to make additional guesses.
+- The conclusion, constraint, or action target SHOULD appear at the start of each paragraph. Placing the key term first reduces the need for long-range dependencies when the LLM resolves the meaning of subsequent clauses.
+- Pleasantries and openers (e.g., "In this section, we will...") MUST NOT be used. Phrases like "In this section, we will..." carry zero semantic payload and shift the governing noun away from the actual subject.
+- Double negatives SHOULD NOT be used. The double negative conceals the true intention.
+- Pronouns SHOULD be replaced with concrete nouns to eliminate ambiguous reference. Pronouns like "it", "they", and "this" depend on co-reference context absent in isolated chunks.
+- Specifications or requirements statements SHOULD include rationale so the LLM infers intent rather than following rules rigidly. However, for certain rules that require strict adherence, RFC 2119 keywords MAY be used; these keywords carry precise, standardized semantics.
 
 **Bad:**
 
@@ -60,9 +60,9 @@ Errors MUST be written to `error.log`. Each log entry MUST include a timestamp a
 
 ### Content Discipline
 
-- Single Source of Truth: Each concept SHOULD be defined in exactly one place; reference it elsewhere rather than repeating.
-- Common knowledge SHOULD be omitted; state only domain-specific logic and constraints.
-- A document MUST use one term per concept; inconsistent naming increases embedding dispersion and ambiguity.
+- Each concept SHOULD have a single source of truth; reference the concept elsewhere rather than repeating. Repeated definitions create divergent embeddings; retrieval may surface conflicting versions, introducing inconsistency.
+- Common knowledge SHOULD be omitted; state only domain-specific logic and constraints. Repeating facts already known to the LLM (such as "SOP is a standard operating procedure") not only wastes tokens but also dilutes the key meaning.
+- A document SHOULD use one term per concept; inconsistent naming increases embedding dispersion and ambiguity. Synonyms scatter a concept's representation across multiple points in the embedding space.
 
 **Bad:**
 
@@ -90,17 +90,17 @@ Expired tokens (see Auth) MAY be exchanged for a new token via `POST /refresh`.
 
 ### Formatting
 
-- Emoji, decorative dividers, and ASCII art MUST NOT be used.
-- Bold, italic, and strikethrough SHOULD NOT be used for visual emphasis.
-- Bold MAY be used as a structural element, such as the key term in a definition-style list item.
-- `inline code` MUST be used for all variable names, file paths, command names, and literal values.
-- Unordered lists SHOULD be used by default; ordered lists MUST only be used when sequence is required.
-- Heading titles MUST NOT include sequential numbers unless the sections have an explicit ordering relationship.
-- Lists SHOULD be preferred over tables.
-- For complex data structures, SHOULD consider using JSON.
-- Every code block MUST have a language tag.
-- Blockquotes MAY be used for quotations, callouts, or asides that are distinct from the main content.
-- CommonMark syntax MUST be used; GFM extensions and non-standard Markdown features SHOULD be avoided.
+- Emoji, decorative dividers, and ASCII art MUST NOT be used. Emoji tokenize unpredictably; decorative elements increase token count without contributing to meaning.
+- Bold, italics, and strikethrough SHOULD be used sparingly. Overuse can create noise.
+- Bold MAY be used as a structural element, such as the key term in a definition-style list item. When bold consistently marks key terms, bold signals a structural pattern the LLM can recognize and use for extraction (term → definition).
+- `inline code` SHOULD be used for all variable names, file paths, command names, and literal values. Backtick-enclosed strings are treated as literal identifiers by convention. Backtick wrapping also distinguishes semantically distinct forms such as `null` (the literal) and null (the concept).
+- Unordered lists SHOULD be used by default; ordered lists MUST only be used when sequence is required. Ordered lists imply sequential dependency; applying them to non-sequential items introduces false ordering relationships.
+- Heading titles MUST NOT include sequential numbers unless the sections have an explicit ordering relationship. Numbering headings implies priority or sequence where none exists.
+- Lists SHOULD be preferred over tables. Lists can convey the same information with lower parsing overhead.
+- Complex data structures SHOULD be represented using JSON. JSON's well-defined, machine-parseable structure enables reliable extraction by LLMs.
+- Every code block SHOULD have a language tag, and SHOULD use the full name (e.g., `typescript` instead of `ts`). For code blocks that do not require syntax understanding (such as those describing directory structures), use `text`. Language tags enable syntax-aware parsing and prevent misidentification.
+- Blockquotes MAY be used for quotations, callouts, or asides that are distinct from the main content. Blockquotes create a semantic boundary signaling that the content is subordinate or parenthetical to the main flow.
+- CommonMark syntax SHOULD be used; GFM extensions and non-standard Markdown features SHOULD be avoided. Many extension syntaxes are designed to meet human rendering needs; non-standard syntax does not guarantee semantic consistency.
 
 **Bad:**
 
