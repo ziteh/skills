@@ -110,7 +110,7 @@ set -euo pipefail
 ### No decorative output
 
 - SHOULD NOT add visual banners, dividers, or section headers.
-- Exception: MAY use decoration to highlight a final result.
+- Exception: MAY use decoration to highlight a important message.
 
 ```sh
 # DON'T — decorates a routine step
@@ -127,6 +127,7 @@ mkdir output
 echo "=================="
 echo "Output: $RES_FILE"
 echo "Failed: $FAILED_CNT/$TOTAL_CNT"
+echo "=================="
 ```
 
 ## Windows Batch (.bat)

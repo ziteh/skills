@@ -25,5 +25,6 @@ echo
 echo "==================="
 echo "Validation complete"
 echo "Failed: $failed/$count"
+echo "==================="
 
 exit $failed
