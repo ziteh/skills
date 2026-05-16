@@ -97,6 +97,7 @@ Expired tokens (see Auth) MAY be exchanged for a new token via `POST /refresh`.
 - Unordered lists SHOULD be used by default; ordered lists MUST only be used when sequence is required.
 - Heading titles MUST NOT include sequential numbers unless the sections have an explicit ordering relationship.
 - Lists SHOULD be preferred over tables.
+- For complex data structures, SHOULD consider using JSON.
 - Every code block MUST have a language tag.
 - Blockquotes MAY be used for quotations, callouts, or asides that are distinct from the main content.
 - CommonMark syntax MUST be used; GFM extensions and non-standard Markdown features SHOULD be avoided.
