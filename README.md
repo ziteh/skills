@@ -14,13 +14,13 @@ ln -s /path/to/skills/<SKILL_FOLDER> ~/.claude/skills/<SKILL_FOLDER>
 
 Uses `skills-ref` to validate SKILL.md files.
 
-```bash
+```sh
 ./validate.sh
 ```
 
 or
 
-```bash
+```sh
 cd agentskills/skills-ref
 uv sync
 source .venv/bin/activate

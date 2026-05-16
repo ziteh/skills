@@ -1,21 +1,21 @@
 ---
 name: mvp-script
-description: Write simple, quick scripts (.sh, .bat) for MVPs or prototypes.
+description: Write simple, quick scripts (.sh, .bat) for MVPs or prototypes. Use this skill whenever the user asks for a bash script, shell script, batch file, .sh, .bat, or says things like "write me a script to...", "automate X", "quick script for Y", or "just something that does Z." Trigger for any scripting task where speed and correctness matter more than polish.
 ---
 
 # MVP Script
 
 Scripts in MVP/prototype contexts should be **ugly, fast, and obviously correct** — validate quickly, not impress.
 
-## The Core Rules
-
 > Keywords follow RFC 2119.
+
+## Rules
 
 ### No numbering
 
-- MUST NOT use step numbers. They go stale when steps are inserted or reordered.
+- SHOULD NOT use step numbers. They go stale when steps are inserted or reordered.
 
-```bash
+```sh
 # DON'T
 echo "Step 1: Build"
 npm run build
@@ -27,10 +27,10 @@ npm run build
 
 ### Only log what you can't see otherwise
 
-- MUST log runtime-dependent values (paths, URLs, IDs).
+- SHOULD log runtime-dependent values (paths, URLs, IDs).
 - MUST NOT log self-evident actions.
 
-```bash
+```sh
 # DON'T — logs the action, not the value that matters
 echo "Copying files"
 cp -r src/ "$DEST_DIR"
@@ -42,9 +42,9 @@ cp -r src/ "$DEST_DIR"
 
 ### Fail fast
 
-- MUST NOT add retries, fallbacks, or friendly error messages. Let it crash with the raw error.
+- SHOULD NOT add retries, fallbacks, or friendly error messages. Let it crash with the raw error.
 
-```bash
+```sh
 # DON'T
 if ! mkdir -p "$DIR"; then
   echo "Error: Could not create directory $DIR. Please check permissions."
@@ -65,7 +65,7 @@ Comments:
 - MUST explain why — intent and constraint — not what.
 - MUST NOT duplicate the `echo`.
 
-```bash
+```sh
 # DON'T
 sleep 10 # Wait for 10 seconds
 
@@ -73,7 +73,7 @@ sleep 10 # Wait for 10 seconds
 sleep 10 # Avoid rate limiting
 ```
 
-```bash
+```sh
 # DON'T
 echo "Get data"
 # Get data from API via curl
@@ -89,10 +89,10 @@ curl https://example.com/api/data
 Scripts:
 
 - MUST be fully autonomous.
-- MUST NOT use interactive prompts.
+- SHOULD NOT use interactive prompts.
 - MUST use exit codes to signal success/failure.
 
-```bash
+```sh
 # DON'T — blocks automation
 read -p "Continue? (y/n) " confirm
 [[ "$confirm" != "y" ]] && exit 1
@@ -112,7 +112,7 @@ set -euo pipefail
 - SHOULD NOT add visual banners, dividers, or section headers.
 - Exception: MAY use decoration to highlight a final result.
 
-```bash
+```sh
 # DON'T — decorates a routine step
 echo "=================="
 echo "Create folder"
@@ -129,8 +129,46 @@ echo "Output: $RES_FILE"
 echo "Failed: $FAILED_CNT/$TOTAL_CNT"
 ```
 
+## Windows Batch (.bat)
+
+The same principles apply — fail fast, no step numbers, only log runtime values.
+
+```bat
+@echo off
+setlocal enabledelayedexpansion
+
+REM DON'T — step numbers go stale
+echo Step 1: Build
+call npm run build
+
+REM DO
+echo Build
+call npm run build
+```
+
+```bat
+REM DON'T — logs the action, not the value
+echo Copying files
+xcopy /E /I src "%DEST_DIR%"
+
+REM DO — logs the value; action is self-evident
+echo Dest dir: %DEST_DIR%
+xcopy /E /I src "%DEST_DIR%"
+```
+
+Fail fast in .bat — check `%ERRORLEVEL%` after critical commands or use `|| exit /b 1`:
+
+```bat
+call npm run build || exit /b 1
+call npm run test  || exit /b 1
+```
+
+## Scope
+
+These rules apply to MVP/prototype/automation scripts — where speed and correctness are the goal. If the user says the script will go to production or needs error recovery, don't apply the fail-fast and no-retry rules blindly; ask what level of robustness they need.
+
 ## Workflow
 
-- Run scripts after writing; verify it behaves as expected.
-- On unexpected behavior: add debug output (`set -x`, `echo`) → diagnose → fix → keep only the messages that matter at runtime and remove any temporary debug messages.
+- Write the script, then run it to verify it behaves as expected.
+- On unexpected behavior: add debug output (`set -x` / `echo %VAR%`) → diagnose → fix → remove temporary debug messages before finishing.
 - On repeated failure: decompose → test parts independently → integrate.
