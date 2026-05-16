@@ -134,6 +134,14 @@ git pull
 > **Note:** Basic syntax is sufficient.
 ````
 
+## Skills
+
+For guidelines on writing `SKILL.md` files for [Agent Skills](https://agentskills.io/home), refer to:
+
+- [skill-creator](https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md)
+- [Best practices](https://agentskills.io/skill-creation/best-practices.md)
+- [Spec](https://agentskills.io/specification.md)
+
 ## Drafting Process
 
 1. **Outline Core Concepts**: identify the specific constraints, logic, or formats the LLM lacks.
