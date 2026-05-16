@@ -1,43 +1,71 @@
 ---
 name: skill-maker
-description: Create new skills and maintain existing SKILL.md files. Use when the user wants to create a skill directory and SKILL.md from scratch, add Python scripts to a skill, update skill instructions or frontmatter, or review a SKILL.md.
+description: Create new skills, modify and improve existing skills. Use when users want to write a new skill from scratch, refine an existing SKILL.md, optimize a skill's description for better triggering accuracy, add supporting scripts.
 ---
 
 # Skill Maker
 
 Create and maintain Agent Skills — directories containing a `SKILL.md` and optional supporting files.
 
-## Directory structure
+## Creating a skill
+
+### Capture intent
+
+Start by understanding what the user actually wants. If the user says something like "turn this into a skill," extract the requirement from the current conversation. If the user says "I need a skill to do X," make sure the goal is clear and that you understand what success looks like. When the intent is ambiguous, ask clarifying questions until both sides agree on the requirement.
+
+Key questions to confirm:
+
+- What is the primary purpose of this skill?
+- When should it trigger?
+- What are the expected inputs and outputs?
+
+### Research
+
+Actively probe for edge cases, constraints, positive/negative examples, and whether scripts or reference files are needed. Read relevant docs, specs, and best practices to build a complete picture of the requirements.
+
+If the request seems like an anti-pattern, unconventional, or a poor fit for a skill, surface that concern and explain the tradeoff or a better alternative — but let the user make the final call.
+
+### Write the SKILL.md
+
+Create a new directory named after the skill and place a `SKILL.md` inside it.
 
 ```txt
 skill-name/
-├── SKILL.md
-├── scripts/  # Optional
-└── ...
+└── SKILL.md
 ```
 
-## SKILL.md
+Begin `SKILL.md` with frontmatter containing `name` and `description`.
 
-For guidelines on writing `SKILL.md` files for [Agent Skills](https://agentskills.io/home), refer to:
+```md
+---
+name: skill-name
+description: Clearly describe what this skill does and when it triggers.
+---
 
-- [skill-creator](https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md)
-- [Best practices](https://agentskills.io/skill-creation/best-practices.md)
-- [Spec](https://agentskills.io/specification.md)
+# Skill Name
+```
 
+The `description` field is critical — it controls when the skill is selected. Write it to be clear, specific, and action-oriented, with concrete trigger examples. Avoid vague or generic phrasing. Refer to the [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions.md).
 
-### Body
+```yaml
+# Bad - too vague, not actionable
+description: Helps with PDFs.
 
-Follow [llm-friendly-md](../llm-friendly-md/SKILL.md).
+# Good - clear, actionable, with trigger examples
+description: Extracts text and tables from PDF files, fills PDF forms, and merges multiple PDFs. Use when working with PDF documents or when the user mentions PDFs, forms, or document extraction.
+```
 
-## Scripts
+Write the body clearly and concisely: purpose, usage, supported inputs, positive/negative examples. Keep the structure logical.
 
-- For simple automation prefer `.sh` or `.bat`.
-- Use Python when the task is too complex for shell scripts. Refer to [scripts/python.md](scripts/python.md).
+If the content grows long or spans multiple domains, split it into separate files and link to them from `SKILL.md`.
 
-## Workflow
+Some skills are spec-like with strict rules — use RFC 2119 keywords (MUST, SHOULD, MAY) there. Others are general-purpose and benefit from a flexible tone: explain the reasoning behind each guideline rather than mandating it, so the skill remains adaptable rather than brittle.
 
-1. Create `skill-name/` and `skill-name/SKILL.md`.
-2. Write frontmatter: `name` matching the directory, `description` covering what and when.
-3. Write the body: rules, workflow, examples.
-4. Add scripts if needed, following the Python script guidelines if using Python.
-5. Validate markdown: `python3 ../llm-friendly-md/scripts/check.py SKILL.md`.
+Refer to the [Best Practices](https://agentskills.io/skill-creation/best-practices.md).
+
+### Scripts
+
+If the skill requires automation, add scripts in a `scripts/` (or other appropriate folder name) subdirectory.
+
+- Prefer `.sh` or `.bat` for simple automation.
+- Use Python for complex logic. See [scripts/python.md](scripts/python.md).
