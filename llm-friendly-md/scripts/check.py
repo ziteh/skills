@@ -5,6 +5,11 @@ import subprocess
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / "skill-maker" / "scripts"))
+import bootstrap  # pyright: ignore[reportMissingImports]
+
+bootstrap.ensure(Path(__file__).parent)  # pyright: ignore[reportUnknownMemberType]
+
 
 def collect_md_files(targets: list[Path]) -> list[Path]:
     files: list[Path] = []
@@ -20,27 +25,14 @@ def collect_md_files(targets: list[Path]) -> list[Path]:
 
 
 def main() -> int:
+    scripts = Path(__file__).parent
     bin_dir = "Scripts" if sys.platform == "win32" else "bin"
     ext = ".exe" if sys.platform == "win32" else ""
-    scripts_dir = Path(__file__).parent
-    config_file = scripts_dir / ".pymarkdown.yaml"
-    venv_dir = scripts_dir / ".venv"
-    pymarkdown_bin = venv_dir / bin_dir / f"pymarkdown{ext}"
-    if not pymarkdown_bin.exists():
-        print("Setting up venv...")
-        subprocess.run([sys.executable, "-m", "venv", str(venv_dir)], check=True)
-        pip = venv_dir / bin_dir / f"pip{ext}"
-        subprocess.run(
-            [str(pip), "install", "-r", str(scripts_dir / "requirements.txt")],
-            check=True,
-        )
+    pymarkdown_bin = scripts / ".venv" / bin_dir / f"pymarkdown{ext}"
+    config_file = scripts / ".pymarkdown.yaml"
 
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "targets",
-        nargs="+",
-        help="Files or directories to check",
-    )
+    parser.add_argument("targets", nargs="+", help="Files or directories to check")
     args = parser.parse_args()
 
     md_files = collect_md_files([Path(t) for t in args.targets])
@@ -48,15 +40,13 @@ def main() -> int:
         print("No .md files found.")
         return 0
 
-    # Check files with pymarkdown
     result = subprocess.run(
         [str(pymarkdown_bin), "--strict-config", "--config", str(config_file), "scan"]
         + [str(f) for f in md_files]
     )
-    return_code = result.returncode
-    if return_code == 0:
+    if result.returncode == 0:
         print(f"All {len(md_files)} files passed.")
-    return return_code
+    return result.returncode
 
 
 if __name__ == "__main__":

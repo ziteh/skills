@@ -4,9 +4,12 @@ Ensure the Python virtual environment is set up and dependencies are installed.
 Usage:
     import sys
     from pathlib import Path
-    sys.path.insert(0, str(Path(__file__).parent.parent))
-    import bootstrap
-    bootstrap.ensure(Path(__file__).parent)
+    sys.path.insert(0, str(Path(__file__).parent.parent.parent / "skill-maker" / "scripts"))
+    import bootstrap  # pyright: ignore[reportMissingImports]
+    bootstrap.ensure(Path(__file__).parent)  # pyright: ignore[reportUnknownMemberType]
+
+    # ruff: noqa: E402
+    import requests
 
 Attributes:
     AUDIT_INTERVAL_SEC: Time interval in seconds to run pip-audit security checks.
@@ -126,6 +129,7 @@ def ensure(script_dir: Path, pip_audit_ver: str = PIP_AUDIT_VER) -> None:
     if _should_audit(venv):
         _run_audit(venv)
 
+    # If we're not already running inside the venv, re-run the script with the venv's Python
     if not _is_in_venv(venv):
         result = subprocess.run([str(_venv_python(venv))] + sys.argv)
         sys.exit(result.returncode)

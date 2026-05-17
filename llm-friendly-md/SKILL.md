@@ -149,3 +149,8 @@ git pull
 - Single file: `python3 scripts/check.py SKILL.md`
 - Directory (recursive): `python3 scripts/check.py docs/`
 - Mixed: `python3 scripts/check.py SKILL.md docs/`
+
+`scripts/count_tokens.py` estimates token usage, output in JSON format. Actual counts vary by model, but relative comparisons are valid.
+
+- Default encoding (`cl100k_base`): `python3 scripts/count_tokens.py SKILL.md`
+- Other encoding: `python3 scripts/count_tokens.py SKILL.md --encoding o200k_base`
