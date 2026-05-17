@@ -1,0 +1,52 @@
+{
+  "skill_name": "llm-friendly-md",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "This is the SKILL.md for my code-review Claude skill. It was written a while back and I think it's a mess. Can you rewrite it to be more LLM-friendly? The file is at evals/files/bad-code-review-skill.md",
+      "expected_output": "A rewritten SKILL.md that fixes all violations: removes emoji/decorative elements, eliminates skipped heading levels, converts tables to lists, removes pleasantries and filler phrases, replaces pronouns with concrete nouns, adds inline code formatting for literals, uses RFC 2119 keywords where appropriate, and consolidates repeated concepts.",
+      "files": ["evals/files/bad-code-review-skill.md"],
+      "assertions": [
+        "The output contains no emoji characters",
+        "The output contains no decorative horizontal rules or dividers (bare '---' lines used as section breaks rather than front matter delimiters)",
+        "The output contains no opener phrases such as 'In this section', 'Welcome to', or 'we will discuss'",
+        "The output has no skipped heading levels (e.g. H4 directly under H2 without an H3 in between)",
+        "The security checks are presented as a list, not as a Markdown table",
+        "The output contains no double negatives (e.g. 'not uncommon', 'should not forget')",
+        "All code blocks in the output have a language tag (e.g. ```json, ```sh)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Write an AGENTS.md for a web scraping agent. It handles pagination (following next-page links until none remain), authentication with Bearer tokens passed via Authorization header, and rate limiting at max 2 requests per second. Results are written as JSONL to stdout.",
+      "expected_output": "A well-structured AGENTS.md with exactly one H1, no skipped heading levels, no emoji or decorative dividers, uses inline code for technical terms (Authorization header, JSONL, etc.), avoids pleasantries, uses RFC 2119 keywords for requirements, and clearly specifies the agent's behaviors without repetition.",
+      "files": [],
+      "assertions": [
+        "The output contains exactly one H1 heading",
+        "The output has no skipped heading levels",
+        "The output contains no emoji characters",
+        "The term 'Authorization' is formatted as inline code when used as a header name",
+        "The rate limit of 2 requests per second is clearly stated",
+        "Pagination behavior (follow next-page links until none remain) is clearly described",
+        "The output contains no opener phrases or pleasantries",
+        "All code blocks (if any) have a language tag"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Is my ticket summarizer prompt template LLM-friendly? Please review it and fix any issues you find. The file is at evals/files/ticket-summarizer-template.md",
+      "expected_output": "A review identifying violations (emoji, GFM alert syntax, pleasantries, vague pronoun usage, repetitive content) followed by a corrected version of the template that applies all the llm-friendly-md rules.",
+      "files": ["evals/files/ticket-summarizer-template.md"],
+      "assertions": [
+        "The review identifies the emoji in the document title as a violation",
+        "The review identifies the GFM-specific '[!NOTE]' alert syntax as a violation",
+        "The review identifies the opener/pleasantry phrase ('In this document we will explain') as a violation",
+        "The review identifies the double negative ('not uncommon') as a violation",
+        "The fixed template contains no emoji characters",
+        "The fixed template does not use GFM alert syntax '[!NOTE]'",
+        "The fixed template contains no opener phrases like 'In this document we will'",
+        "The fixed template contains no double negatives"
+      ]
+    }
+  ]
+}
