@@ -145,20 +145,53 @@ git pull
 
 ## Validation
 
-`scripts/lint.py` validates `.md` files. The venv is created automatically on first run.
+Three scripts validate different aspects of `.md` files.
 
-- Single file: `python3 scripts/lint.py SKILL.md`
-- Directory (recursive): `python3 scripts/lint.py docs/`
-- Mixed: `python3 scripts/lint.py SKILL.md docs/`
+First run will automatically create a venv and install dependencies. Also regularly check its dependencies for security vulnerabilities. If a security warning appears, review the listed dependencies.
 
-`scripts/count_tokens.py` estimates token usage, output in JSON format. Actual counts vary by model, but relative comparisons are valid.
+### `lint.py` — Structure
 
-- Default encoding (`cl100k_base`): `python3 scripts/count_tokens.py SKILL.md`
-- Other encoding: `python3 scripts/count_tokens.py SKILL.md --encoding o200k_base`
+Validates file structure and formatting rules. On success, it exits with 0 and produces no output to stdout.
 
-`scripts/spell_check.py` checks spelling in prose, ignoring fenced code blocks and inline code. Uses spaCy for tokenisation and pyspellchecker for dictionary lookup. Output is JSONL — one object per suspected misspelling. The spell-check results are for reference only; it may misidentify some proper nouns.
+```bash
+python3 scripts/lint.py SKILL.md         # single file
+python3 scripts/lint.py docs/            # directory (recursive)
+python3 scripts/lint.py SKILL.md docs/   # mixed
+```
 
-- Check a file: `python3 scripts/spell_check.py SKILL.md`
-- Other language: `python3 scripts/spell_check.py SKILL.md --lang es`
+### `count_tokens.py` — Token Usage
 
-Each output line has the form `{"line": <n>, "word": "<word>", "suggestions": [...]}`.
+Estimates token count; output is JSON. Counts vary by model, but relative comparisons are valid.
+
+```bash
+python3 scripts/count_tokens.py SKILL.md                        # default (cl100k_base)
+python3 scripts/count_tokens.py SKILL.md --encoding o200k_base  # other encoding
+```
+
+Output format:
+
+```json
+{
+  "file": "/path/to/SKILL.md",
+  "tokens": 1790,
+  "chars": 8244,
+  "chars_per_token": 4.606,
+  "encoding": "cl100k_base"
+}
+```
+
+### `spell_check.py` — Spelling
+
+Checks prose spelling; skips fenced code blocks and inline code. Output is JSONL — one object per suspected misspelling. Results are reference only; proper nouns may be flagged.
+
+```bash
+python3 scripts/spell_check.py SKILL.md           # English (default)
+python3 scripts/spell_check.py SKILL.md --lang es # other language
+```
+
+Output format:
+
+```jsonl
+{"line": <n1>, "word": "<word1>", "suggestions": ["sug1a", "sug1b", ...]}
+{"line": <n2>, "word": "<word2>", "suggestions": ["sug2a", "sug2b", ...]}
+```
