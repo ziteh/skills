@@ -154,3 +154,10 @@ git pull
 
 - Default encoding (`cl100k_base`): `python3 scripts/count_tokens.py SKILL.md`
 - Other encoding: `python3 scripts/count_tokens.py SKILL.md --encoding o200k_base`
+
+`scripts/spell_check.py` checks spelling in prose, ignoring fenced code blocks and inline code. Uses spaCy for tokenisation and pyspellchecker for dictionary lookup. Output is JSONL — one object per suspected misspelling. The spell-check results are for reference only; it may misidentify some proper nouns.
+
+- Check a file: `python3 scripts/spell_check.py SKILL.md`
+- Other language: `python3 scripts/spell_check.py SKILL.md --lang es`
+
+Each output line has the form `{"line": <n>, "word": "<word>", "suggestions": [...]}`.

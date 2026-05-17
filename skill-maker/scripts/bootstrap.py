@@ -23,12 +23,12 @@ import time
 from pathlib import Path
 
 AUDIT_INTERVAL_SEC = 60 * 60 * 24 * 7
-PIP_AUDIT_VER = "==2.10.0"
+PIP_AUDIT_VER = "~=2.10.0"
 
 
 class Colors:
     YELLOW = "\033[93m"
-    GRAY = "\033[90m"
+    BLUE = "\033[94m"
     ENDC = "\033[0m"
 
 
@@ -65,14 +65,14 @@ def _is_in_venv(venv: Path) -> bool:
 
 
 def _create_venv(venv: Path) -> None:
-    print(f"{Colors.GRAY}[bootstrap]{Colors.ENDC} Creating virtual environment: {venv}")
+    print(f"{Colors.BLUE}[bootstrap]{Colors.ENDC} Creating virtual environment: {venv}")
     if venv.exists():
         shutil.rmtree(venv)
     subprocess.run([sys.executable, "-m", "venv", str(venv)], check=True)
 
 
 def _install_deps(venv: Path, requirements_txt: Path, pip_audit_ver: str) -> None:
-    print(f"{Colors.GRAY}[bootstrap]{Colors.ENDC} Installing dependencies...")
+    print(f"{Colors.BLUE}[bootstrap]{Colors.ENDC} Installing dependencies...")
     subprocess.run([str(_venv_pip(venv)), "install", "--upgrade", "pip"], check=True)
     if requirements_txt.exists():
         subprocess.run(
@@ -125,6 +125,7 @@ def ensure(script_dir: Path, pip_audit_ver: str = PIP_AUDIT_VER) -> None:
     if needs_install:
         _create_venv(venv)
         _install_deps(venv, requirements_txt, pip_audit_ver)
+        print(f"{Colors.BLUE}[bootstrap]{Colors.ENDC} Setup complete.\n")
 
     if _should_audit(venv):
         _run_audit(venv)

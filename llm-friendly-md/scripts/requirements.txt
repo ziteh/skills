@@ -1,2 +1,4 @@
-pymarkdownlnt >= 0.9.37, < 1.0.0
-tiktoken >= 0.7.0
+pymarkdownlnt ~= 0.9
+tiktoken ~= 0.13
+spacy ~= 3.8
+pyspellchecker ~= 0.9
