@@ -45,6 +45,7 @@ def main() -> int:
                 "file": str(path.resolve()),
                 "tokens": tokens,
                 "chars": chars,
+                "chars_per_token": round(chars / tokens, 3) if tokens > 0 else 0,
                 "encoding": args.encoding,
             },
             indent=2,
