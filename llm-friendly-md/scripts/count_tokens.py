@@ -17,21 +17,25 @@ bootstrap.ensure(Path(__file__).parent)  # pyright: ignore[reportUnknownMemberTy
 import tiktoken
 
 DEFAULT_ENCODING = "cl100k_base"
+assert DEFAULT_ENCODING in tiktoken.list_encoding_names(), "Invalid default encoding"
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("file", help="Markdown file to count")
+    parser = argparse.ArgumentParser(
+        description="Count approximate token and character usage for a text file."
+    )
+    parser.add_argument("file", help="File to count")
     parser.add_argument(
         "--encoding",
         default=DEFAULT_ENCODING,
+        choices=tiktoken.list_encoding_names(),
         help=f"tiktoken encoding (default: {DEFAULT_ENCODING})",
     )
     args = parser.parse_args()
 
     path = Path(args.file)
-    if not path.is_file() or path.suffix != ".md":
-        print(f"Error: '{path}' is not a .md file.")
+    if not path.is_file():
+        print(f"Error: '{path}' is not a file.", file=sys.stderr)
         return 1
 
     text = path.read_text(encoding="utf-8")

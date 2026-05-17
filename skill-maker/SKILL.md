@@ -69,3 +69,14 @@ If the skill requires automation, add scripts in a `scripts/` (or other appropri
 
 - Prefer `.sh` or `.bat` for simple automation.
 - Use Python for complex logic. See [scripts/python.md](scripts/python.md).
+
+Regardless of the method used, there are some general rules:
+
+- **Avoid interactive:** Scripts SHOULD NOT require user interaction during execution. This ensures they can run unattended and be integrated into automated workflows.
+- **Usage help:** Scripts SHOULD provide usage information when invoked with `--help`. The agent will naturally use `--help` to learn how to use this script.
+- **Structured output:** Scripts SHOULD use structured formats (JSON, CSV, etc.) over free-form text. This helps the agent better understand and allows for combination with pipelines.
+- **Helpful error messages:** Scripts SHOULD provide helpful error messages so that the agent knows how to correct the issue. For example, it should output `Error: The specified file 'path/to/file.md' is not supported; accepts only .txt, .csv, .tsv` rather than `Error: Invalid data.`
+- **Separate data from diagnostics:** Progress, logs, debug, and the like SHOULD be written to stderr; stdout SHOULD be used only for outputting clean and parsable data.
+- **Meaningful exit codes:** Scripts SHOULD use exit codes to indicate success (0) or failure (non-zero). This allows the agent to detect errors programmatically. If the script does not need to produce any output when it succeeds, it should exit silently with an exit code of 0.
+- **Idempotency:** Scripts SHOULD ensure that running them multiple times produces the same result without unintended side effects. This allows the agent to safely retry.
+- **Dry-run mode:** For destructive or stateful operations, a `--dry-run` flag SHOULD be provided to allow previewing what will happen.

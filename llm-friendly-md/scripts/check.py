@@ -20,7 +20,7 @@ def collect_md_files(targets: list[Path]) -> list[Path]:
         elif target.is_dir():
             files.extend(sorted(target.rglob("*.md")))
         else:
-            print(f"Warning: '{target}' does not exist, skipping.")
+            print(f"Warning: '{target}' does not exist, skipping.", file=sys.stderr)
     return sorted(set(files))
 
 
@@ -31,13 +31,13 @@ def main() -> int:
     pymarkdown_bin = scripts / ".venv" / bin_dir / f"pymarkdown{ext}"
     config_file = scripts / ".pymarkdown.yaml"
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description="Lint Markdown files.")
     parser.add_argument("targets", nargs="+", help="Files or directories to check")
     args = parser.parse_args()
 
     md_files = collect_md_files([Path(t) for t in args.targets])
     if not md_files:
-        print("No .md files found.")
+        print("No .md files found.", file=sys.stderr)
         return 0
 
     result = subprocess.run(
@@ -45,7 +45,7 @@ def main() -> int:
         + [str(f) for f in md_files]
     )
     if result.returncode == 0:
-        print(f"All {len(md_files)} files passed.")
+        print(f"All {len(md_files)} files passed.", file=sys.stderr)
     return result.returncode
 
 
