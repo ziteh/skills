@@ -145,11 +145,11 @@ git pull
 
 ## Validation
 
-`scripts/check.py` validates `.md` files. The venv is created automatically on first run.
+`scripts/lint.py` validates `.md` files. The venv is created automatically on first run.
 
-- Single file: `python3 scripts/check.py SKILL.md`
-- Directory (recursive): `python3 scripts/check.py docs/`
-- Mixed: `python3 scripts/check.py SKILL.md docs/`
+- Single file: `python3 scripts/lint.py SKILL.md`
+- Directory (recursive): `python3 scripts/lint.py docs/`
+- Mixed: `python3 scripts/lint.py SKILL.md docs/`
 
 `scripts/count_tokens.py` estimates token usage, output in JSON format. Actual counts vary by model, but relative comparisons are valid.
 
