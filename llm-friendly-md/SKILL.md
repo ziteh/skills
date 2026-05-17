@@ -45,6 +45,7 @@ Write for LLMs first, not general human-facing. Help LLMs better understand and 
 - Double negatives SHOULD NOT be used. The double negative conceals the true intention.
 - Pronouns SHOULD be replaced with concrete nouns to eliminate ambiguous reference. Pronouns like "it", "they", and "this" depend on co-reference context absent in isolated chunks.
 - Specifications or requirements statements SHOULD include rationale so the LLM infers intent rather than following rules rigidly. However, for certain rules that require strict adherence, RFC 2119 keywords MAY be used; these keywords carry precise, standardized semantics.
+- Requirement statements SHOULD be accompanied by both a positive (correct) example and a negative (incorrect) example. Contrastive examples sharply delineate the boundary of a rule; without them, the LLM must infer the boundary from the rule text alone.
 
 **Bad:**
 
