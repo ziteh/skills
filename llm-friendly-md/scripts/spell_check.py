@@ -46,11 +46,32 @@ def extract_text(md_source: str) -> list[tuple[int, str]]:
     return out
 
 
-def check_spelling(md_path: Path, language: str) -> list[tuple[int, str, list[str]]]:
+def load_wordlist(path: Path) -> list[str]:
+    """Return non-empty, non-comment lines from a wordlist file."""
+    return [
+        line.strip().lower()
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.strip() and not line.startswith("#")
+    ]
+
+
+def check_spelling(
+    md_path: Path, language: str, extra_wordlists: list[Path] | None = None
+) -> list[tuple[int, str, list[str]]]:
     """Return (line, original_word, suggestions) for each likely misspelling."""
     source = md_path.read_text(encoding="utf-8")
     nlp = spacy.blank(language)  # tokeniser only — no model download required
     spell = SpellChecker(language=language)
+
+    # Auto-discover .wordlist alongside the MD file, then apply explicit lists.
+    candidate_lists: list[Path] = []
+    auto = md_path.parent / ".wordlist"
+    if auto.is_file():
+        candidate_lists.append(auto)
+    if extra_wordlists:
+        candidate_lists.extend(extra_wordlists)
+    for wl in candidate_lists:
+        spell.word_frequency.load_words(load_wordlist(wl))
 
     issues: list[tuple[int, str, list[str]]] = []
     seen: set[str] = set()  # suppress duplicate reports for the same word
@@ -84,6 +105,12 @@ def main() -> int:
     parser.add_argument(
         "--lang", default="en", help="Spell-check language (default: en)"
     )
+    parser.add_argument(
+        "--wordlist",
+        action="append",
+        metavar="FILE",
+        help="Path to a wordlist file (one word per line, # for comments). May be repeated.",
+    )
     args = parser.parse_args()
 
     md_path = Path(args.path)
@@ -91,7 +118,8 @@ def main() -> int:
         print(f"error: '{md_path}' is not a valid .md file", file=sys.stderr)
         return 1
 
-    issues = check_spelling(md_path, language=args.lang)
+    extra = [Path(p) for p in args.wordlist] if args.wordlist else None
+    issues = check_spelling(md_path, language=args.lang, extra_wordlists=extra)
     for line_no, word, suggestions in sorted(issues):
         print(
             json.dumps(

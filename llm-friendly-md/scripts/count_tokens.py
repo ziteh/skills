@@ -20,6 +20,23 @@ DEFAULT_ENCODING = "cl100k_base"
 assert DEFAULT_ENCODING in tiktoken.list_encoding_names(), "Invalid default encoding"
 
 
+def count_file_tokens(
+    path: Path, encoding: str = DEFAULT_ENCODING
+) -> dict[str, object]:
+    """Return token/char statistics for a UTF-8 text file."""
+    text = path.read_text(encoding="utf-8")
+    enc = tiktoken.get_encoding(encoding)
+    tokens = len(enc.encode(text))
+    chars = len(text)
+    return {
+        "file": str(path.resolve()),
+        "tokens": tokens,
+        "chars": chars,
+        "chars_per_token": round(chars / tokens, 3) if tokens > 0 else 0,
+        "encoding": encoding,
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="Count approximate token and character usage for a text file."
@@ -38,23 +55,7 @@ def main() -> int:
         print(f"Error: '{path}' is not a file.", file=sys.stderr)
         return 1
 
-    text = path.read_text(encoding="utf-8")
-    enc = tiktoken.get_encoding(args.encoding)
-    tokens = len(enc.encode(text))
-    chars = len(text)
-
-    print(
-        json.dumps(
-            {
-                "file": str(path.resolve()),
-                "tokens": tokens,
-                "chars": chars,
-                "chars_per_token": round(chars / tokens, 3) if tokens > 0 else 0,
-                "encoding": args.encoding,
-            },
-            indent=2,
-        )
-    )
+    print(json.dumps(count_file_tokens(path, args.encoding), indent=2))
     return 0
 
 

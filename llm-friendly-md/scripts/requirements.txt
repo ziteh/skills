@@ -2,3 +2,4 @@ pymarkdownlnt ~= 0.9
 tiktoken ~= 0.13
 spacy ~= 3.8
 pyspellchecker ~= 0.9
+pytest >= 8
