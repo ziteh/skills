@@ -114,7 +114,7 @@ def _run_audit(venv: Path) -> None:
         )
         print(result.stdout, file=sys.stderr)
         print(
-            "It is recommended to update the affected packages or verify if the vulnerabilities impact your use case.",
+            "Please review these vulnerabilities and update the affected packages to the recommended versions. If an update is not feasible, assess whether the vulnerabilities impact your use case and document the exception.",
             file=sys.stderr,
         )
 
